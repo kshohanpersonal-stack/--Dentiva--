@@ -1,0 +1,1 @@
+using System.Windows;namespace Dentiva.Desktop;public partial class MainWindow:Window{public MainWindow(){InitializeComponent();}}

@@ -1,0 +1,17 @@
+name: Windows build
+on: [push, workflow_dispatch]
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with: {dotnet-version: '8.0.x'}
+      - name: Test
+        run: dotnet test Dentiva.sln -c Release
+      - name: Publish
+        run: dotnet publish src/Dentiva.Desktop/Dentiva.Desktop.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -o publish/win-x64
+      - name: Portable zip
+        run: Compress-Archive -Path publish/win-x64/* -DestinationPath dist/Dentiva-Portable-v1.0.0-x64.zip
+      - uses: actions/upload-artifact@v4
+        with: {name: Dentiva-Windows-build, path: 'dist/*'}
